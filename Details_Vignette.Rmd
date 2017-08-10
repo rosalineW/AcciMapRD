@@ -1,0 +1,123 @@
+---
+title: "AcciMapRD Details"
+author: "Ruoding Wang"
+date: "2017-08-10"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{AcciMapRD Details}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## AcciMapRD Info
+
+The AcciMapRD Info package includes the data (for example state, latitude, month, hour, people, and so on) of accidents happend in the US in different years. It also includes the functions manipulating the data in the package database. For example, there are functions to search available datasets in the package, summarize the number of accident, map the accident point, and so on.
+
+## Styles
+
+The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+
+    output: 
+      rmarkdown::html_vignette:
+        css: mystyles.css
+
+## Functions
+```{r echo=FALSE}
+library(magrittr)
+fars_read <- function(filename) {
+  if(!file.exists(filename))
+    stop("file '", filename, "' does not exist")
+  data <- suppressMessages({
+    readr::read_csv(filename, progress = FALSE)
+  })
+  dplyr::tbl_df(data)
+}
+
+make_filename <- function(year) {
+  year <- as.integer(year)
+  sprintf("accident_%d.csv.bz2", year)
+}
+
+fars_read_years <- function(years) {
+        lapply(years, function(year) {
+                file <- make_filename(year)
+                tryCatch({
+                        dat <- fars_read(file)
+                        dplyr::mutate(dat, year = year) %>%
+                                dplyr::select(MONTH, year)
+                }, error = function(e) {
+                        warning("invalid year: ", year)
+                        return(NULL)
+                })
+        })
+}
+
+fars_summarize_years <- function(years) {
+  dat_list <- fars_read_years(years)
+  dplyr::bind_rows(dat_list) %>%
+    dplyr::group_by(year, MONTH) %>%
+    dplyr::summarize(n = n()) %>%
+    tidyr::spread(year, n)
+}
+
+fars_map_state <- function(state.num, year) {
+        filename <- make_filename(year)
+        data <- fars_read(filename)
+        state.num <- as.integer(state.num)
+
+        if(!(state.num %in% unique(data$STATE)))
+                stop("invalid STATE number: ", state.num)
+        data.sub <- dplyr::filter(data, STATE == state.num)
+        if(nrow(data.sub) == 0L) {
+                message("no accidents to plot")
+                return(invisible(NULL))
+        }
+        is.na(data.sub$LONGITUD) <- data.sub$LONGITUD > 900
+        is.na(data.sub$LATITUDE) <- data.sub$LATITUDE > 90
+        with(data.sub, {
+                maps::map("state", ylim = range(LATITUDE, na.rm = TRUE),
+                          xlim = range(LONGITUD, na.rm = TRUE))
+                graphics::points(LONGITUD, LATITUDE, pch = 46)
+        })
+}
+```
+
+The functions in the pacakge include:
+
+fars_read() is a function that check the existence of the dataset under current directory. And it is also the basic function used in the fars_read_years() and fars_map_state().
+
+make_filename() is a function that generate the file name in the format of "accident_year.csv.bz2". It is also used in fars_read_years() and fars_map_state().
+
+fars_read_years() is a function that select year and month columns from files of each year that is included in the input list. it is also the basic function used in the fars_summarize_years().
+
+fars_summarize_years() is a function that generate a summary table of number of observations of each year and each month.
+
+fars_map_state() This is a function that plot the map of the points that have accidents happened in the given state and given year.
+
+```{r}
+make_filename(2014)
+```
+
+## Table
+List the month and year of the accident happend in 2013, 2015, and 2016, if the data of that year is valid.
+```{r}
+fars_read_years(c(2013,2015,2016))
+```
+
+Show a summary table of the number of accident happend in each month of 2013, 2014, and 2015.
+```{r}
+fars_summarize_years(c(2013,2014,2015))
+```
+
+## Map
+Map the points where the accidents happend at the state whose state number is 1 in 2015.
+```{r}
+fars_map_state(1,2015)
+```
+
+## More Examples
+You can also combine the functions according to your needs.
+```{r}
+fars_read(make_filename(2014))
+```
+
