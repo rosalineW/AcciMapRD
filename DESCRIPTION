@@ -1,0 +1,16 @@
+Package: AcciMapRD
+Type: Package
+Title: Accident Record around US
+Version: 0.1.0
+Author: Ruoding Wang
+Maintainer: The package maintainer <rosaline.cn@hotmail.com>
+Description: The AcciMapRD Info package includes the data (for example state, latitude, month, hour, 
+    people, and so on) of accidents happend in the US in different years. It also includes the functions 
+    manipulating the data in the package database. For example, there are functions to search available 
+    datasets in the package, summarize the number of accident, map the accident point, and so on.
+License: GPL
+Encoding: UTF-8
+LazyData: true
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
