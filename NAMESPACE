@@ -1,8 +1,4 @@
 exportPattern("AcciMapRD")
 
-importFrom("stats")
-importFrom("readr","read_csv")
-importFrom("dplyr","tbl_df","mutate","select","group_by","summarize","filter")
-importFrom("tidyr","spread")
-importFrom("maps","map")
+import("stats")
 importFrom("graphics","points")
