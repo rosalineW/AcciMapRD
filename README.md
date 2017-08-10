@@ -3,7 +3,7 @@
 The goal of AcciMapRD is helping users to manipulate the data of accidents happend in the US in certain years. It includes the functions of searching available datasets in the package, summarizing the number of accident, mapping the accident point, and so on.
 
 ## Travis Badge
-[![Build Status](https://travis-ci.org/rosalineW/AcciMapRD.svg?branch=travis-setup)](https://travis-ci.org/rosalineW/AcciMapRD)
+[![Build Status](https://travis-ci.org/rosalineW/AcciMapRD.svg?branch=master)](https://travis-ci.org/rosalineW/AcciMapRD)
 
 ## Example
 
