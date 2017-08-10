@@ -1,6 +1,3 @@
-AcciMapRD
-=================
-
 # AcciMapRD
 
 The goal of AcciMapRD is helping users to manipulate the data of accidents happend in the US in certain years. It includes the functions of searching available datasets in the package, summarizing the number of accident, mapping the accident point, and so on.
