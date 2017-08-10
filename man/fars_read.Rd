@@ -22,19 +22,4 @@ This function returns a data frame that will be deprecated or an error message. 
 }
 \examples{
 fars_read("file.csv")
-
-## The function is currently defined as
-function (filename)
-{
-    if (!file.exists(filename))
-        stop("file '", filename, "' does not exist")
-    data <- suppressMessages({
-        readr::read_csv(filename, progress = FALSE)
-    })
-    dplyr::tbl_df(data)
-  }
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-\keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

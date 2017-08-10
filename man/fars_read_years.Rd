@@ -24,20 +24,4 @@ This function returns NULL or a list of data frames that have 2 columns, year an
 ys<-c(2012,2013,2014,2015)
 fars_read_years(ys)
 fars_read_years(c(2011,2014,2017))
-
-## The function is currently defined as
-function (years)
-{
-    lapply(years, function(year) {
-        file <- make_filename(year)
-        tryCatch({
-            dat <- fars_read(file)
-            dplyr::mutate(dat, year = year) \%>\% dplyr::select(MONTH,
-                year)
-        }, error = function(e) {
-            warning("invalid year: ", year)
-            return(NULL)
-        })
-    })
-  }
 }

@@ -22,11 +22,4 @@ This function returns a character string as the file name. As a side effect, the
 }
 \examples{
 make_filename(2013)
-
-## The function is currently defined as
-function (year)
-{
-    year <- as.integer(year)
-    sprintf("accident_\%d.csv.bz2", year)
-  }
 }
